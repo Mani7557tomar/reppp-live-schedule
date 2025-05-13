@@ -4,31 +4,57 @@
   <title>REPPP Live Schedule</title>
   <style>
     body {
-      background-color: Black;
+      background: black;
       color: white;
+      font-family: sans-serif;
       text-align: center;
-      font-family: Arial;
     }
-    iframe {
-      width: 100%;
-      height: 90vh;
-      border: none;
+    table {
+      margin: auto;
+      border-collapse: collapse;
+      width: 90%;
+      margin-top: 30px;
+    }
+    th, td {
+      border: 1px solid white;
+      padding: 12px;
+    }
+    th {
+      background-color: #333;
     }
     img {
-      max-width: 200px;
-      margin: 20px 0;
+      margin-top: 20px;
+      width: 200px;
     }
   </style>
 </head>
 <body>
-  <img src="https://drive.google.com/uc?export=view&id=1KyixDT2G2mDbgAYeIgudR2X6LdYPcw_R" alt="REPPP Logo" />
-  <iframe id="schedule" src="https://script.google.com/macros/s/AKfycbyhO7N1nmrZQ75RRmkxNm58ZYxmE5NUnVGBYlFjf86sQKPCCUaW9_MML_yMv38TRZVqTA/exec"></iframe>
+  <img src="https://drive.google.com/file/d/1KyixDT2G2mDbgAYeIgudR2X6LdYPcw_R/view?usp=drive_link" alt="REPPP Logo" />
+  <h1>Live Booking Schedule</h1>
+  <table id="schedule">
+    <tr><th>Court</th><th>Time Slot</th><th>Booking Name</th></tr>
+  </table>
 
   <script>
-  setInterval(() => {
-    document.getElementById("schedule").src += "";
-  }, 10000); // Refresh every 10 seconds
-</script>
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbyW2OZjXPjbkgl9mFYHHPWGS2Toopm4mJMS9JTVE0shgokxlK3--qSiF9mPTAURCCBzgw/exec';
 
+    async function loadData() {
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+
+      const table = document.getElementById('schedule');
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${row.court}</td><td>${row.time}</td><td>${row.name}</td>`;
+        table.appendChild(tr);
+      });
+    }
+
+    loadData();
+    setInterval(() => {
+      document.getElementById('schedule').innerHTML = `<tr><th>Court</th><th>Time Slot</th><th>Booking Name</th></tr>`;
+      loadData();
+    }, 10000); // Refresh every 10 sec
+  </script>
 </body>
 </html>
