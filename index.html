@@ -111,7 +111,7 @@
     // Show schedule for 2 minutes
     showSchedule();
     refreshSchedule();
-    scheduleInterval = setInterval(refreshSchedule, 10000);
+    scheduleInterval = setInterval(refreshSchedule, 1000);
 
     setTimeout(() => {
       clearInterval(scheduleInterval);
