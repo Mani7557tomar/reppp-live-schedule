@@ -14,7 +14,7 @@
   #logo {
     display: block;
     margin: 20px auto 10px auto;
-    width: 400px;
+    width: 300px;
   }
   #heading {
     margin-top: 110;
@@ -69,11 +69,11 @@
     const data = await res.json();
 
     const table = document.getElementById('schedule');
-    data.forEach(row => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${row.sno}</td><td>${row.time}</td><td>${row.name}</td>`;
-      table.appendChild(tr);
-    });
+    data.forEach((row, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${index + 1}</td><td>${row.time}</td><td>${row.name}</td>`;
+        table.appendChild(tr);
+      });
   } catch (error) {
     console.error('Error loading schedule:', error);
   }
