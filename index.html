@@ -17,7 +17,7 @@
     width: 300px;
   }
   #heading {
-    margin-top: 110;
+    margin-top: 30px;
   }
   table {
     margin: 30px auto;
@@ -48,14 +48,13 @@
   
   <!-- Schedule Table -->
   <table id="schedule">
-    <tr><th>S.No</th><th>Time Slot</th><th>Booking Name</th></tr>
+    <tr><th>S. No</th><th>Time Slot</th><th>Booking Name</th></tr>
   </table>
 
   <video id="brandingVideo" autoplay muted>
-  <source src="branding.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
+    <source src="branding.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 
   <script>
   const apiUrl = 'https://script.google.com/macros/s/AKfycbyW2OZjXPjbkgl9mFYHHPWGS2Toopm4mJMS9JTVE0shgokxlK3--qSiF9mPTAURCCBzgw/exec';
@@ -64,23 +63,30 @@
   let resumeTime = 0;
 
   async function loadData() {
-  try {
-    const res = await fetch(apiUrl);
-    const data = await res.json();
+    try {
+      const res = await fetch(apiUrl);
+      const data = await res.json();
 
-    const table = document.getElementById('schedule');
-    data.forEach((row, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${index + 1}</td><td>${row.time}</td><td>${row.name}</td>`;
-        table.appendChild(tr);
+      const table = document.getElementById('schedule');
+      table.innerHTML = `<tr><th>S. No</th><th>Time Slot</th><th>Booking Name</th></tr>`;
+
+      let serial = 1;
+      data.forEach((row) => {
+        if (row.time && row.name) {  // Only add rows with non-empty time and name
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${serial}</td><td>${row.time}</td><td>${row.name}</td>`;
+          table.appendChild(tr);
+          serial++;
+        }
       });
-  } catch (error) {
-    console.error('Error loading schedule:', error);
+
+      console.log('Schedule loaded:', data);
+    } catch (error) {
+      console.error('Error loading schedule:', error);
+    }
   }
-}
 
   function refreshSchedule() {
-    document.getElementById('schedule').innerHTML = `<tr><th>S.No</th><th>Time Slot</th><th>Booking Name</th></tr>`;
     loadData();
   }
 
@@ -119,13 +125,13 @@
         resumeTime = video.currentTime;
         video.pause();
         startCycle(); // restart the cycle
-      }, 1 * 60 * 3000); // 1 minute for branding
+      }, 1 * 60 * 1000); // 1 minute for branding
 
-    }, 2 * 60 * 200); // 2 minutes for schedule
+    }, 2 * 60 * 1000); // 2 minutes for schedule
   }
 
   // Initial start
   startCycle();
-</script>
+  </script>
 </body>
 </html>
