@@ -70,7 +70,7 @@
     const table = document.getElementById('schedule');
     data.forEach(row => {
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${row.S.No}</td><td>${row.time}</td><td>${row.name}</td>`;
+      tr.innerHTML = `<td>${row.sno}</td><td>${row.time}</td><td>${row.name}</td>`;
       table.appendChild(tr);
     });
   }
