@@ -48,7 +48,7 @@
   
   <!-- Schedule Table -->
   <table id="schedule">
-    <tr><th>S. No</th><th>Time Slot</th><th>Booking Name</th></tr>
+    <tr><th>S.No</th><th>Time Slot</th><th>Booking Name</th></tr>
   </table>
 
   <video id="brandingVideo" autoplay muted>
@@ -70,13 +70,13 @@
     const table = document.getElementById('schedule');
     data.forEach(row => {
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${row.court}</td><td>${row.time}</td><td>${row.name}</td>`;
+      tr.innerHTML = `<td>${row.S.No}</td><td>${row.time}</td><td>${row.name}</td>`;
       table.appendChild(tr);
     });
   }
 
   function refreshSchedule() {
-    document.getElementById('schedule').innerHTML = `<tr><th>Court</th><th>Time Slot</th><th>Booking Name</th></tr>`;
+    document.getElementById('schedule').innerHTML = `<tr><th>S.No</th><th>Time Slot</th><th>Booking Name</th></tr>`;
     loadData();
   }
 
