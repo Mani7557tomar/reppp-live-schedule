@@ -1,137 +1,290 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>REPPP Live Schedule</title>
-<style>
-  body {
-    background: #2a3284;
-    color: white;
-    font-family: sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-  }
-  #logo {
-    display: block;
-    margin: 20px auto 10px auto;
-    width: 300px;
-  }
-  #heading {
-    margin-top: 30px;
-  }
-  table {
-    margin: 30px auto;
-    border-collapse: collapse;
-    width: 90%;
-  }
-  th, td {
-    border: 5px solid white;
-    padding: 10px;
-    text-align: center;
-  }
-  th {
-    background-color: #2a3284;
-  }
-  #brandingVideo {
-    display: none;
-    width: 100%;
-    max-width: 100%;
-    margin-top: 0px;
-  }
-</style>
+  <style>
+    body {
+      background: #2a3284;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
 
+    #topBar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 30px;
+      height: 70px;
+    }
+
+    #dateTime {
+      color: white;
+      font-size: 18px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      min-width: 20px;
+      text-align: center;
+      user-select: none;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    #currentDate {
+      font-weight: bold;
+    }
+
+    #currentTime {
+      font-size: 16px;
+      margin-top: 2px;
+      font-weight: bold;
+    }
+
+    #logo {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 60px;
+      user-select: none;
+    }
+
+    #heading {
+      margin-top: 2px;
+      font-size: 28px;
+      color: white;
+      text-align: center;
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 80%;
+      margin: 30px auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      background: linear-gradient(145deg, #283593, #1a237e);
+      border-radius: 15px;
+      overflow: hidden;
+      font-size: 18px;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: center;
+      color: white;
+    }
+
+    th {
+      background: #1a237e;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    td {
+      background: rgba(204, 2, 2, 0.07);
+      backdrop-filter: blur(2px);
+      font-weight: 500;
+    }
+
+    tr:nth-child(even) td {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    #brandingVideo {
+      display: none;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    @keyframes blink {
+      0% {opacity: 1;}
+      50% {opacity: 0.3;}
+      100% {opacity: 1;}
+    }
+  </style>
 </head>
+
 <body>
-  <!-- Logo -->
-  <img id="logo" src="REPPP white& blue logo.png" alt="REPPP Logo" />
-  <h1 id="heading">Padel 1 Booking Schedule</h1>
-  
-  <!-- Schedule Table -->
+  <div id="topBar">
+    <div id="dateTime">
+      <div id="currentDate">Loading date...</div>
+      <div id="currentTime">Loading time...</div>
+    </div>
+    <img id="logo" src="C:\Users\Manish Tomar\Desktop\REPPP white& blue logo.png" alt="REPPP Logo" />
+  </div>
+
+  <h1 id="heading">Padel C1 Booking Schedule</h1>
+
   <table id="schedule">
-    <tr><th>S. No</th><th>Time Slot</th><th>Booking Name</th></tr>
+    <thead>
+      <tr id="scheduleHeaderRow">
+        <!-- Dynamic headers will be inserted here once -->
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Booking rows will be inserted here -->
+    </tbody>
   </table>
 
-  <video id="brandingVideo" autoplay muted>
-    <source src="branding.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  <video id="brandingVideo" autoplay muted loop playsinline style="display: none;">
+  <source src="C:\Users\Manish Tomar\Desktop\WhatsApp Video 2025-04-25 at 12.46.06_d7d30d41.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
   <script>
-  const apiUrl = 'https://script.google.com/macros/s/AKfycbyW2OZjXPjbkgl9mFYHHPWGS2Toopm4mJMS9JTVE0shgokxlK3--qSiF9mPTAURCCBzgw/exec';
-  const video = document.getElementById('brandingVideo');
-  let scheduleInterval;
-  let resumeTime = 0;
+    const apiUrl = 'https://opensheet.elk.sh/136K8_fNQFZzvSJF9MToG6P174RvklPZdG9GTWkyU01s/Sheet1';
 
-  async function loadData() {
-    try {
-      const res = await fetch(apiUrl);
-      const data = await res.json();
+    const video = document.getElementById('brandingVideo');
+    const adVideoSource = document.getElementById('adVideoSource');
+    let scheduleInterval;
+    let resumeTime = 0;
 
-      const table = document.getElementById('schedule');
-      table.innerHTML = `<tr><th>S. No</th><th>Time Slot</th><th>Booking Name</th></tr>`;
+    const currentDateElement = document.getElementById('currentDate');
+    const currentTimeElement = document.getElementById('currentTime');
+    let headersSet = false;
 
-      let serial = 1;
-      data.forEach((row) => {
-        if (row.time && row.name) {  // Only add rows with non-empty time and name
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${serial}</td><td>${row.time}</td><td>${row.name}</td>`;
-          table.appendChild(tr);
-          serial++;
-        }
+    function updateDateTime() {
+      const now = new Date();
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      currentDateElement.textContent = now.toLocaleDateString(undefined, options);
+      currentTimeElement.textContent = now.toLocaleTimeString(undefined, { hour12: false });
+    }
+
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    async function loadData() {
+  try {
+    const res = await fetch(apiUrl);
+    const data = await res.json();
+    const tbody = document.querySelector('#schedule tbody');
+    const theadRow = document.getElementById('scheduleHeaderRow');
+
+    tbody.innerHTML = '';
+
+    if (!headersSet && data.length > 0) {
+      theadRow.innerHTML = '';
+      const headers = Object.keys(data[0]);
+      headers.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        theadRow.appendChild(th);
+      });
+      headersSet = true;
+    }
+
+    const now = new Date();
+    let rowCount = 0; // Track how many rows are added
+
+    data.forEach(row => {
+      const tr = document.createElement('tr');
+      let hideRow = false;
+
+      Object.keys(row).forEach(header => {
+        const td = document.createElement('td');
+        td.textContent = row[header] || '';
+        tr.appendChild(td);
       });
 
-      console.log('Schedule loaded:', data);
-    } catch (error) {
-      console.error('Error loading schedule:', error);
+      const timeSlot = row['Time Slot'] || row['time slot'];
+      if (timeSlot) {
+        const [start, end] = timeSlot.split(/\s*[-–—]\s*/);
+        if (start && end) {
+          const [startH, startM] = start.split(':').map(Number);
+          const [endH, endM] = end.split(':').map(Number);
+
+          const startTime = new Date();
+          startTime.setHours(startH, startM, 0, 0);
+          const endTime = new Date();
+          endTime.setHours(endH, endM, 0, 0);
+
+          if (now >= startTime && now <= endTime) {
+            tr.style.background = '#00c853';
+            tr.style.color = 'black';
+            tr.style.fontWeight = 'bold';
+            tr.style.animation = 'blink 1s infinite';
+          }
+
+          if (now > endTime) {
+            hideRow = true;
+          }
+        }
+      }
+
+      if (!hideRow) {
+        tbody.appendChild(tr);
+        rowCount++;
+      }
+    });
+
+    // If no rows were added, show "No Booking"
+    if (rowCount === 0) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = theadRow.children.length || 1;
+      td.textContent = 'No Upcoming Booking';
+      td.style.fontWeight = 'bold';
+      td.style.fontSize = '20px';
+      td.style.padding = '20px';
+      td.style.color = 'white';
+      td.style.background = 'rgba(255, 255, 255, 0.1)';
+      tr.appendChild(td);
+      tbody.appendChild(tr);
     }
+
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
   }
+}
 
-  function refreshSchedule() {
-    loadData();
-  }
 
-  function showSchedule() {
-    document.getElementById('logo').style.display = 'block';
-    document.getElementById('heading').style.display = 'block';
-    document.getElementById('schedule').style.display = 'table';
-    document.getElementById('brandingVideo').style.display = 'none';
-  }
-    
-  function showBrandingVideo() {
-    document.getElementById('logo').style.display = 'none';
-    document.getElementById('heading').style.display = 'none';
-    document.getElementById('schedule').style.display = 'none';
-    document.getElementById('brandingVideo').style.display = 'block';
+    function showSchedule() {
+      document.getElementById('logo').style.display = 'block';
+      document.getElementById('heading').style.display = 'block';
+      document.getElementById('dateTime').style.display = 'flex';
+      document.getElementById('schedule').style.display = 'table';
+      video.style.display = 'none';
+    }
 
-    video.currentTime = resumeTime;
-    video.play();
-  }
+    function showBrandingVideo() {
+      document.getElementById('logo').style.display = 'none';
+      document.getElementById('heading').style.display = 'none';
+      document.getElementById('dateTime').style.display = 'none';
+      document.getElementById('schedule').style.display = 'none';
+      video.style.display = 'block';
+      video.currentTime = resumeTime;
+      video.play();
+    }
 
-  function startCycle() {
-    // Show schedule for 2 minutes
-    showSchedule();
-    refreshSchedule();
-    scheduleInterval = setInterval(refreshSchedule, 1000);
-
-    setTimeout(() => {
-      clearInterval(scheduleInterval);
-
-      // Pause schedule and show branding for 1 minute
-      resumeTime = video.currentTime;
-      showBrandingVideo();
+    function startCycle() {
+      showSchedule();
+      refreshSchedule();
+      scheduleInterval = setInterval(refreshSchedule, 10000); // every 10 sec
 
       setTimeout(() => {
-        // Back to schedule
+        clearInterval(scheduleInterval);
         resumeTime = video.currentTime;
-        video.pause();
-        startCycle(); // restart the cycle
-      }, 1 * 60 * 1000); // 1 minute for branding
+        showBrandingVideo();
 
-    }, 2 * 60 * 1000); // 2 minutes for schedule
-  }
+        setTimeout(() => {
+          resumeTime = video.currentTime;
+          video.pause();
+          startCycle();
+        }, 60000); // 1 min of video
+      }, 120000); // 2 min of schedule
+    }
 
-  // Initial start
-  startCycle();
+    async function refreshSchedule() {
+      await loadData();
+    }
+
+    startCycle();
   </script>
 </body>
 </html>
